@@ -1,0 +1,7 @@
+Entry Task
+
+- scss modules will be loaded as css modules; css files will be loaded as global styles
+
+- production mode needs more optimization
+
+- not sure if I will use redux at the end, since this is just a simple demo project and redux requires lots of codes
