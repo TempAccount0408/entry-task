@@ -32,9 +32,8 @@ export const App = () => (
                     </SubMenu>
                 </Menu>
             </Sider>
-            <Layout.Content>
-                <Content />
-            </Layout.Content>
+
+            <Content />
         </Layout>
     </Layout>
 )

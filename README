@@ -4,4 +4,3 @@ Entry Task
 
 - production mode needs more optimization
 
-- not sure if I will use redux at the end, since this is just a simple demo project and redux requires lots of codes

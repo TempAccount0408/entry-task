@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { PageHeader } from 'antd'
+import { PageHeader, Layout } from 'antd'
+import { Content as TablePage } from './pages/table'
 
 const routes = [
     {
@@ -17,5 +18,10 @@ const routes = [
 ]
 
 export const Content = () => {
-    return <PageHeader title="Title" breadcrumb={{ routes }} />
+    return (
+        <Layout.Content style={{ padding: 16, backgroundColor: 'white' }}>
+            <PageHeader title="" breadcrumb={{ routes }} />
+            <TablePage />
+        </Layout.Content>
+    )
 }
