@@ -3,7 +3,7 @@ import * as moment from 'moment'
 import { compose, isNil, map, not } from 'ramda'
 import * as React from 'react'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { Description, useDescriptions } from '../../hooks'
+import { Description, useAuth, useDescriptions } from '../hooks'
 import { useFilter } from './Filter'
 
 const EditableContext = React.createContext(null)
@@ -20,6 +20,7 @@ const EditableRow = ({ index, ...props }: any) => {
 }
 
 const EditableCell = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }: any) => {
+    const [auth] = useAuth()
     const [editing, setEditing] = useState(false)
     const inputRef = useRef(null)
     const form = useContext(EditableContext)
@@ -28,6 +29,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
     }, [editing])
 
     const toggleEdit = () => {
+        if (!auth.admin) return
         setEditing(!editing)
         form.setFieldsValue({
             [dataIndex]: record[dataIndex],
@@ -68,6 +70,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
 }
 
 export const EditableTable = () => {
+    const [auth] = useAuth()
     const [descriptions, setDescriptions] = useDescriptions()
     const [conditions] = useFilter()
 
@@ -100,14 +103,13 @@ export const EditableTable = () => {
                     okText="Delete"
                     onConfirm={() => setDescriptions(descriptions.filter(desc => desc.id != record.id))}
                 >
-                    <a>Delete</a>
+                    {auth.admin && <a>Delete</a>}
                 </Popconfirm>
             ),
         },
     ]
 
-    const handleSave = (record: Description) =>
-        setDescriptions(descriptions.map(desc => (desc.id == record.id ? record : desc)))
+    const handleSave = (record: Description) => setDescriptions(descriptions.map(desc => (desc.id == record.id ? record : desc)))
 
     const components = {
         body: {
@@ -134,6 +136,7 @@ export const EditableTable = () => {
     return (
         <div>
             <Table
+                rowKey="id"
                 components={components}
                 dataSource={descriptions.filter(desc => {
                     for (const condition of conditions) {
@@ -141,10 +144,7 @@ export const EditableTable = () => {
                             if (desc.name != condition.value) return false
                         } else if (condition.name == 'description' && !isNil(condition.value)) {
                             if (desc.description != condition.value) return false
-                        } else if (
-                            condition.name == 'date' &&
-                            condition.value.filter(compose(not, isNil)).length == 2
-                        ) {
+                        } else if (condition.name == 'date' && condition.value.filter(compose(not, isNil)).length == 2) {
                             const [start, end] = desc.duration.map(t => moment(t))
                             const duration = moment.duration(end.diff(start))
                             const [fstart, fend] = map(moment, condition.value)

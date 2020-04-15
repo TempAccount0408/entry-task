@@ -1,12 +1,14 @@
-import 'normalize.css'
 import 'antd/dist/antd.css'
-import './index.css'
-
+import 'normalize.css'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-
+import { HashRouter as Router } from 'react-router-dom'
 import { App } from './app'
+import './index.css'
 
-const insert_point = document.querySelector('#app')
-
-ReactDOM.render(<App />, insert_point)
+ReactDOM.render(
+    <Router>
+        <App />
+    </Router>,
+    document.querySelector('#app')
+)

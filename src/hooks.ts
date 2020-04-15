@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import * as uuid from 'uuid'
 
 export const createStore = <T>(initState: T): (() => [T, (state: T) => void]) => {
     const listeners: Set<(state: T) => void> = new Set()
@@ -26,17 +27,30 @@ export interface Description {
     name: string
     description: string
     duration: [number, number]
-    id: number
+    id: string
 }
 
 const start = 1318785876406
 const end = 1348781876406
 export const useDescriptions = createStore([
-    { name: 'Curry0', description: 'Front-End Dev', duration: [start, end], id: 0 },
-    { name: 'Curry1', description: 'Front-End Dev', duration: [start, end], id: 1 },
-    { name: 'Curry2', description: 'Front-End Dev', duration: [start, end], id: 2 },
-    { name: 'Curry3', description: 'Front-End Dev', duration: [start, end], id: 3 },
-    { name: 'Curry4', description: 'Front-End Dev', duration: [start, end], id: 4 },
-    { name: 'Curry5', description: 'Front-End Dev', duration: [start, end], id: 5 },
-    { name: 'Curry6', description: 'Front-End Dev', duration: [start, end], id: 6 },
+    { name: 'Curry0', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry1', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry2', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry3', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry4', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry5', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
+    { name: 'Curry6', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
 ] as Description[])
+
+export interface AppStatus {
+    logged: boolean
+}
+
+export const useApp = createStore({ logged: false } as AppStatus)
+
+export interface Auth {
+    name: string
+    admin: boolean
+}
+
+export const useAuth = createStore({ name: '', admin: false } as Auth)

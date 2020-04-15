@@ -1,39 +1,46 @@
+import { Layout, Menu } from 'antd'
 import * as React from 'react'
-import { Layout, Menu, Breadcrumb } from 'antd'
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons'
-import * as styles from './app.scss'
+import { useLocation } from 'react-router-dom'
 import { Content } from './content'
+import { routes } from './routes'
+import { useApp } from './hooks'
+import LoginPage from './LoginPage'
 
 const { SubMenu } = Menu
 const { Header, Sider } = Layout
 
-const sider_width = 256
+const SiderWidth = 256
 
-export const App = () => (
-    <Layout>
-        <Header></Header>
-        <Layout>
-            <Sider width={sider_width} style={{ height: '100%' }}>
-                <Menu
-                    style={{ width: sider_width }}
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                >
-                    <SubMenu key="sub1" title={<span>Navigation One</span>}>
-                        <Menu.ItemGroup key="g1" title="Item 1">
-                            <Menu.Item key="1">Option 1</Menu.Item>
-                            <Menu.Item key="2">Option 2</Menu.Item>
-                        </Menu.ItemGroup>
-                        <Menu.ItemGroup key="g2" title="Item 2">
-                            <Menu.Item key="3">Option 3</Menu.Item>
-                            <Menu.Item key="4">Option 4</Menu.Item>
-                        </Menu.ItemGroup>
-                    </SubMenu>
-                </Menu>
-            </Sider>
+export const App = () => {
+    const [app] = useApp()
+    const location = useLocation()
+    console.log(location)
 
-            <Content />
-        </Layout>
-    </Layout>
-)
+    if (app.logged)
+        return (
+            <Layout>
+                <Header style={{ color: 'white', backgroundColor: '#2673DD' }}>
+                    <p>System Management</p>
+                </Header>
+                <Layout style={{ background: 'white' }}>
+                    <Sider width={SiderWidth} style={{ height: '100%' }}>
+                        <Menu
+                            style={{ width: SiderWidth, height: '100%' }}
+                            defaultOpenKeys={['1']}
+                            defaultSelectedKeys={[location.pathname]}
+                            mode="inline"
+                        >
+                            <SubMenu key="1" title="System Management">
+                                {routes.map(route => (
+                                    <Menu.Item key={route.path}>{route.name}</Menu.Item>
+                                ))}
+                            </SubMenu>
+                        </Menu>
+                    </Sider>
+
+                    <Content />
+                </Layout>
+            </Layout>
+        )
+    return <LoginPage></LoginPage>
+}

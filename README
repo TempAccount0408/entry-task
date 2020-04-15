@@ -1,6 +1,0 @@
-Entry Task
-
-- scss modules will be loaded as css modules; css files will be loaded as global styles
-
-- production mode needs more optimization
-

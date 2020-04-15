@@ -2,8 +2,8 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import { Moment } from 'moment'
 import { compose, isNil, not } from 'ramda'
 import * as React from 'react'
-import { JOB_DESCRIPTIONS } from '../../constants'
-import { createStore } from '../../hooks'
+import { JOB_DESCRIPTIONS } from '../constants'
+import { createStore } from '../hooks'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -38,10 +38,10 @@ export const Filter = () => {
         setFilter(
             fields
                 .filter(field => {
+                    const name = field.name.join('')
                     if (name == 'name' || name == 'description') {
                         return field.value != undefined
                     } else {
-                        console.log(field.value)
                         return field.value && field.value.filter(compose(not, isNil)).length == 2
                     }
                 })
