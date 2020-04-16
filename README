@@ -1,0 +1,63 @@
+check list
+
+- Auth check / Access Control 
+    - Admins and Users
+- Login page
+- Main (Table) page
+    - Filter 
+    - Create
+        - Single create 
+        - Massive create
+    - Editable Table 
+- Chart Page
+    - `forcefit` doesn't work properly
+    - <Legend /> is not working 
+    - Tooltip only accept pure html strings so I may not connect it with current react instance
+
+- Webpack
+    - Uglify 
+    - Minify 
+    - Tree shaking 
+    - Code split 
+    - Auto prefix
+- React 
+    - Hooks 
+    - React-Router
+- Antd
+- SASS
+    - CSS Modules
+- Typescript 
+- Jest
+- Mock-Server
+- Git & Git Hooks
+    - eslint 
+    - stylelint
+
+---
+
+Run the mock server: `node mock-server/index.js`
+
+Run webapp `npm run watch`
+
+---
+
+Design 
+
+- React-Hooks based state management strategy
+    - redux-style centralized global store management
+        - optional persistence management
+- React-Hooks based API request module for components
+- High Order Components based Auth Control
+
+The whole webapp is splited into several parts:
+    - app skeleton
+        - responsible for page layouts & registering global styles/dependencies 
+    - chart page 
+    - login page 
+    - table page
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+.header {
+    color: white;
+    background-color: #2673dd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+        margin: 0;
+    }
+}
+
+.popover {
+    display: flex;
+    padding-top: 1em;
+    & > img {
+        height: 42px;
+    }
+    & > div {
+        padding-left: 1em;
+    }
+}

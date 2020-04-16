@@ -5,7 +5,7 @@
         "module": "commonjs",
         "target": "es6",
         "jsx": "react",
-        "allowSyntheticDefaultImports": true,
+        // "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "lib": ["dom", "es6"]
     }

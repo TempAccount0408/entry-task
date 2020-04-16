@@ -1,0 +1,49 @@
+- /login PUT
+    ```
+    ReqBody: {
+        email: string
+    }
+
+    ResBody: {
+        id: string
+        name: string
+        email: string
+        admin: boolean
+    }
+    ```
+
+- /logout PUT 
+    ```
+    ReqBody: {
+        id: string
+    }
+    ```
+
+- /list-descriptions POST
+    ```
+    ResBody: {
+        name: string
+        description: string
+        duration: [number, number]
+        id: string
+    }[]
+    ```
+
+- /create-descriptions POST 
+    ```
+    ReqBody: {
+        name: string
+        description: string
+        duration: [number, number]
+        id: string
+    }[]
+    ```
+
+- /update-description PUT 
+    ```
+    ReqBody {
+        name?: string
+        description?: string
+        duration?: [number, number]
+        id: string
+    }
