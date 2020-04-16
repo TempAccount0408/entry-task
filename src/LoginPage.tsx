@@ -2,6 +2,7 @@ import { Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/util'
 import * as React from 'react'
 import { useApp, useAuth } from './hooks'
+import * as uuid from 'uuid'
 
 const { Item } = Form
 
@@ -14,7 +15,7 @@ const Login = () => {
         try {
             const values = await form.validateFields()
             setApp({ ...app, logged: true })
-            setAuth({ ...auth, ...values })
+            setAuth({ ...auth, id: uuid.v4(), ...values })
         } catch (error) {
             console.log('Validate Failed:', error)
         }
@@ -29,6 +30,9 @@ const Login = () => {
         <div style={{ padding: '16px' }}>
             <Form form={form} style={{ width: '100%' }} {...formItemLayout} layout="horizontal" size="large">
                 <Item name="name" label="Name" rules={[{ required: true, message: 'NameName is required!' }]}>
+                    <Input placeholder="String Only" />
+                </Item>
+                <Item name="email" label="Email" rules={[{ required: true, message: 'NameName is required!' }]}>
                     <Input placeholder="String Only" />
                 </Item>
                 <Item name="admin" label="If Admin" rules={[{ required: true, message: 'Descriptoin is required!' }]}>

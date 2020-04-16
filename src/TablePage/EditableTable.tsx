@@ -1,10 +1,9 @@
 import { Form, Input, Popconfirm, Table } from 'antd'
 import * as moment from 'moment'
-import { compose, isNil, map, not } from 'ramda'
 import * as React from 'react'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { Description, useAuth, useDescriptions } from '../hooks'
-import { useFilter } from './Filter'
+import { useConditions } from './Filter'
 
 const EditableContext = React.createContext(null)
 
@@ -72,7 +71,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
 export const EditableTable = () => {
     const [auth] = useAuth()
     const [descriptions, setDescriptions] = useDescriptions()
-    const [conditions] = useFilter()
+    const [conditions] = useConditions()
 
     const columns = [
         {
@@ -139,18 +138,16 @@ export const EditableTable = () => {
                 rowKey="id"
                 components={components}
                 dataSource={descriptions.filter(desc => {
-                    for (const condition of conditions) {
-                        if (condition.name == 'name' && !isNil(condition.value)) {
-                            if (desc.name != condition.value) return false
-                        } else if (condition.name == 'description' && !isNil(condition.value)) {
-                            if (desc.description != condition.value) return false
-                        } else if (condition.name == 'date' && condition.value.filter(compose(not, isNil)).length == 2) {
-                            const [start, end] = desc.duration.map(t => moment(t))
-                            const duration = moment.duration(end.diff(start))
-                            const [fstart, fend] = map(moment, condition.value)
-                            const fduration = moment.duration(fend.diff(fstart))
-                            if (duration.asMilliseconds() < fduration.asMilliseconds()) return false
-                        }
+                    if (conditions.name && !desc.name.startsWith(conditions.name)) {
+                        return false
+                    }
+                    if (conditions.description && desc.description != conditions.description) {
+                        return false
+                    }
+                    if (conditions.duration && conditions.duration.filter(d => d != undefined).length == 2) {
+                        const dd = moment.duration(moment(desc.duration[1]).diff(moment(desc.duration[0])))
+                        const df = moment.duration(conditions.duration[1].diff(conditions.duration[0]))
+                        if (dd.asMilliseconds() < df.asMilliseconds()) return false
                     }
                     return true
                 })}

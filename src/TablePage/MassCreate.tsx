@@ -9,13 +9,19 @@ export interface Props {
     form: FormInstance
 }
 
+// const dummyRequest = ({ file, onSuccess }) => {
+//     setTimeout(() => {
+//         onSuccess('ok')
+//     }, 0)
+// }
+
 export const MassCreate = ({ form }: Props) => {
     return (
         <Form form={form} style={{ width: '100%' }} layout="horizontal" size="large">
-            <Form.Item>
+            <Form.Item name="file" rules={[{ required: true, message: 'At leas one file is required!' }]}>
                 <Dragger
-                    name="file"
                     multiple={true}
+                    beforeUpload={file => false}
                     onChange={info => {
                         const { status } = info.file
                         switch (status) {

@@ -42,15 +42,15 @@ export const useDescriptions = createStore([
     { name: 'Curry6', description: 'Front-End Dev', duration: [start, end], id: uuid.v4() },
 ] as Description[])
 
-export interface AppStatus {
-    logged: boolean
-}
+export interface AppStatus {}
 
-export const useApp = createStore({ logged: false } as AppStatus)
+export const useApp = createStore({} as AppStatus)
 
 export interface Auth {
+    id: string
     name: string
+    email: string
     admin: boolean
 }
 
-export const useAuth = createStore({ name: '', admin: false } as Auth)
+export const useAuth = createStore({ id: uuid.v4(), name: 'Curry', email: 'Curry@shopee.com', admin: true } as Auth)

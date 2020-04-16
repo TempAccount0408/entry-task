@@ -1,64 +1,62 @@
-import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
+import { Button, Col, DatePicker, Form, Input, message, Row, Select } from 'antd'
 import { Moment } from 'moment'
-import { compose, isNil, not } from 'ramda'
 import * as React from 'react'
 import { JOB_DESCRIPTIONS } from '../constants'
 import { createStore } from '../hooks'
+import * as moment from 'moment'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
-const { useState } = React
 
 // I don't know why antd does not export this interface
-interface FieldData {
-    name: string[]
-    value: any
-    touched: boolean
-    validating: boolean
-    errors: string[]
+// interface FieldData {
+//     name: string[]
+//     value: any
+//     touched: boolean
+//     validating: boolean
+//     errors: string[]
+// }
+
+// export type FilterConditions =
+//     | { name: 'name'; value: string }
+//     | { name: 'date'; value: [Moment, Moment] }
+//     | { name: 'description'; value: string }
+
+export type FilterConditions = {
+    name?: string
+    description?: string
+    duration?: [Moment, Moment]
 }
 
-export type FilterConditions =
-    | { name: 'name'; value: string }
-    | { name: 'date'; value: [Moment, Moment] }
-    | { name: 'description'; value: string }
+export const defaults = {
+    name: undefined,
+    description: undefined,
+    duration: [undefined, undefined],
+} as FilterConditions
 
-const defaults = {
-    name: undefined as string,
-    description: undefined as string,
-    date: [undefined as Moment, undefined as Moment],
-}
-
-export const useFilter = createStore([])
+export const useConditions = createStore(defaults)
 
 export const Filter = () => {
-    const [fields, setFields] = useState([] as FieldData[])
-    const [, setFilter] = useFilter()
+    const [form] = Form.useForm()
+    const [conditions, setConditions] = useConditions()
     const submit = () =>
-        setFilter(
-            fields
-                .filter(field => {
-                    const name = field.name.join('')
-                    if (name == 'name' || name == 'description') {
-                        return field.value != undefined
-                    } else {
-                        return field.value && field.value.filter(compose(not, isNil)).length == 2
+        form
+            .validateFields()
+            .then((values: FilterConditions) => {
+                if (values.duration && values.duration.filter(d => d != undefined).length == 2) {
+                    const duration = moment.duration(values.duration[1].diff(values.duration[0]))
+                    if (duration.asMonths() > 24) {
+                        message.error('Entry Date cannot be more than 2 years.')
+                        return
                     }
-                })
-                .map(field => ({ name: field.name.join(''), value: field.value }))
-        )
-    const reset = () => {
-        setFields(
-            fields.map(field => {
-                const name = field.name.join('')
-                if (name == 'name' || name == 'description') {
-                    return { ...field, value: defaults[name] }
-                } else {
-                    return { ...field, value: defaults['date'] }
                 }
+                setConditions(values)
             })
-        )
-        setFilter([])
+            .catch(console.error)
+
+    const reset = () => {
+        form.resetFields()
+        setConditions(defaults)
     }
 
     const formItemLayout = {
@@ -67,10 +65,10 @@ export const Filter = () => {
     }
 
     return (
-        <Form {...formItemLayout} fields={fields} onFieldsChange={(field, fields) => setFields(fields as FieldData[])}>
+        <Form {...formItemLayout} form={form}>
             <Row gutter={16}>
                 <Col span={12}>
-                    <Form.Item name="name" label="Name">
+                    <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input placeholder="String Only" />
                     </Form.Item>
                 </Col>
@@ -88,8 +86,8 @@ export const Filter = () => {
             </Row>
             <Row gutter={16}>
                 <Col span={12}>
-                    <Form.Item name="date" label="Entry Date">
-                        <RangePicker />
+                    <Form.Item name="duration" label="Entry Date">
+                        <RangePicker style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
