@@ -27,3 +27,5 @@ export const TablePage = private_(() => {
         </div>
     )
 })
+
+export default TablePage

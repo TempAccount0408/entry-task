@@ -7,6 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { src_dir, built_dir } = require('./paths')
+const CompressionPlugin = require('compression-webpack-plugin')
 
 const configs = {
     // entry: path.join(src_dir, 'index.tsx'),
@@ -20,6 +21,7 @@ const configs = {
     },
     output: {
         filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
         path: built_dir,
     },
     module: {
@@ -46,7 +48,7 @@ const configs = {
         moment: 'moment',
         antd: 'antd',
     },
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [new CompressionPlugin(), new CleanWebpackPlugin()],
     optimization: {
         splitChunks: {
             minSize: 30,

@@ -7,6 +7,7 @@ const path = require('path')
 const { src_dir, built_dir } = require('./paths')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = merge(common, {
     mode: 'production',
@@ -68,6 +69,10 @@ module.exports = merge(common, {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
+        new webpack.ProgressPlugin((percentage, message, ...args) => {
+            console.info(percentage, message, ...args)
+        }),
+        new BundleAnalyzerPlugin(),
     ],
     optimization: {
         minimize: true,

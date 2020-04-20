@@ -39,7 +39,7 @@ export const useAPI = <T, R>(req: (arg: T) => Promise<R>): [APIState<R>, (arg: T
             setState({ ...defaultState, requesting: false, resp, status: 'SUCCESS' })
             return resp
         } catch (error) {
-            console.log('wori?')
+            console.log(`Action Failed: ${error.toString()}`)
             message.error(`Action Failed: ${error.toString()}`)
             setState({ ...defaultState, requesting: false, error, status: 'FAILED' })
             throw error

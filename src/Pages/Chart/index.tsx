@@ -50,3 +50,5 @@ export const ChartPage = private_(() => {
         </div>
     )
 })
+
+export default ChartPage
