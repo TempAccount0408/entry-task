@@ -1,22 +1,18 @@
 import { PageHeader } from 'antd'
-import { Legend, Axis, Chart, Geom, Tooltip } from 'BizCharts'
+import { Axis, Chart, Geom, Legend, Tooltip } from 'BizCharts'
 import * as moment from 'moment'
 import * as React from 'react'
-import * as api from '../../api'
 import { private_ } from '../../hocs'
-import { useAPI, useDescriptions } from '../../hooks'
+import { builders, useAPI, useDescriptions } from '../../hooks'
 import { RouteConfigs } from '../../routes'
 
 export const ChartPage = private_(() => {
     const [descriptions, setDescriptions] = useDescriptions()
-    const [{ status, resp }, req] = useAPI(api.listDescriptions)
+    const [{ status, resp }, req] = useAPI(builders.listDescriptions)
 
     React.useEffect(() => {
-        req({})
+        req({}).then(setDescriptions)
     }, [])
-    React.useEffect(() => {
-        setDescriptions(resp || [])
-    }, [resp])
 
     const months = []
     for (let i = 1; i <= 9; i += 1) months.push({ count: 0, name: `0${i}` })

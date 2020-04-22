@@ -2,7 +2,7 @@ import { Select, Button, Form, Input, message } from 'antd'
 import { useForm } from 'antd/lib/form/util'
 import * as React from 'react'
 import * as api from '../api'
-import { useApp, useAuth, useAPI } from '../hooks'
+import { useApp, useAuth, useAPI, builders } from '../hooks'
 import * as styles from './Login.modules.scss'
 
 const { Item } = Form
@@ -12,7 +12,7 @@ export const LoginPage = () => {
     const [form] = useForm()
     const [app, setApp] = useApp()
     const [auth, setAuth] = useAuth()
-    const [reqState, request] = useAPI(api.login)
+    const [reqState, request] = useAPI(builders.login)
 
     const login = async () => {
         try {

@@ -6,7 +6,7 @@ import * as uuid from 'uuid'
 import * as api from '../../api'
 import * as styles from './Create.modules.scss'
 import { Description } from '../../api'
-import { useAuth, useDescriptions, useAPI } from '../../hooks'
+import { useAuth, useDescriptions, useAPI, builders } from '../../hooks'
 import { SingleCreate } from './SingleCreate'
 import { protected_ } from '../../hocs'
 
@@ -20,7 +20,7 @@ export const Create = protected_(() => {
     const [files, setFiles] = useState([])
     const [status, setStatus] = useState(defaultStatus)
     const { visible, massive } = status
-    const [state, request] = useAPI(api.createDescriptions)
+    const [state, request] = useAPI(builders.createDescriptions)
 
     const [descriptions, setDescriptions] = useDescriptions()
 
@@ -44,8 +44,7 @@ export const Create = protected_(() => {
                     console.log(json, JSON.parse(json as string))
                     return [...descs, ...JSON.parse(json as string)]
                 }, Promise.resolve([]))
-                const newly = [...descs, ...descriptions]
-                await request({ descriptions: newly })
+                await request({ descriptions: descs })
                 setDescriptions([...descs, ...descriptions])
                 onCancel()
             } else {

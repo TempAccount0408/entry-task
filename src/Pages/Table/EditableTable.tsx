@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useContext, useEffect, useRef, useState } from 'react'
 import * as api from '../../api'
 import { Description } from '../../api'
-import { useAPI, useAuth, useDescriptions } from '../../hooks'
+import { useAPI, useAuth, useDescriptions, builders } from '../../hooks'
 import { useConditions } from './Filter'
 import { equals } from 'ramda'
 import { protected_, private_ } from '../../hocs'
@@ -75,10 +75,11 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
 export const EditableTable = private_(() => {
     const [auth] = useAuth()
     const [descriptions, setDescriptions] = useDescriptions()
-    const [updateReqState, updateReq] = useAPI(api.updateDescription)
-    const [{ status, resp }, req] = useAPI(api.listDescriptions)
+    const [updateReqState, updateReq] = useAPI(builders.updateDescription)
+    const [{ status, resp }, listReq] = useAPI(builders.listDescriptions)
+    const [, deleteReq] = useAPI(builders.deleteDescription)
     React.useEffect(() => {
-        req({})
+        listReq({})
     }, [])
     React.useEffect(() => {
         setDescriptions(resp || [])
@@ -112,7 +113,12 @@ export const EditableTable = private_(() => {
                 <Popconfirm
                     title="Are you sure to delete?"
                     okText="Delete"
-                    onConfirm={() => setDescriptions(descriptions.filter(desc => desc.id != record.id))}
+                    onConfirm={async () => {
+                        try {
+                            await deleteReq({ description: record })
+                            setDescriptions(descriptions.filter(desc => desc.id != record.id))
+                        } catch (error) {}
+                    }}
                 >
                     {auth && auth.admin && <a>Delete</a>}
                 </Popconfirm>
@@ -128,7 +134,7 @@ export const EditableTable = private_(() => {
         if (modified) {
             try {
                 console.log(record)
-                await updateReq(record)
+                await updateReq({ description: record }, true)
                 setDescriptions(descriptions.map(desc => (desc.id == record.id ? record : desc)))
             } catch (error) {}
         }

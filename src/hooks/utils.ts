@@ -1,11 +1,25 @@
-import { useEffect, useState } from 'react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
+
+export const useSafeState = <T>(initState: T): [T, (state: T) => void, MutableRefObject<(state: T) => void>] => {
+    const [state, _setState] = useState(initState)
+    const container = useRef(_setState)
+    const setState = container.current
+    useEffect(() => {
+        return () => {
+            // eslint-disable-next-line
+            container.current = () => {}
+        }
+    }, [])
+
+    return [state, setState, container]
+}
 
 export const createStore = <T>(initState: T): (() => [T, (state: T) => void]) => {
     const listeners: Set<(state: T) => void> = new Set()
     let curr = initState
 
     return () => {
-        const [state, local] = useState(curr)
+        const [state, local] = useSafeState(curr)
         useEffect(() => {
             listeners.add(local)
             return () => {
@@ -15,7 +29,7 @@ export const createStore = <T>(initState: T): (() => [T, (state: T) => void]) =>
 
         const setState = (state: T) => {
             curr = state
-            for (const setState of listeners) setState(state)
+            for (const listener of listeners) listener(state)
         }
 
         return [state, setState]

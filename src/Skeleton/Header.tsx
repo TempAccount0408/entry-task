@@ -2,7 +2,7 @@ import { LogoutOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Layout, Popover } from 'antd'
 import * as React from 'react'
 import * as api from '../api'
-import { useAPI, useApp, useAuth } from '../hooks'
+import { useAPI, useApp, useAuth, builders } from '../hooks'
 import * as styles from './Header.modules.scss'
 
 console.log(styles)
@@ -12,10 +12,10 @@ export const HeaderHeight = 64
 const Header = () => {
     const [auth, setAuth] = useAuth()
     const [app, setApp] = useApp()
-    const [{ status }, req] = useAPI(api.logout)
+    const [{ status }, req] = useAPI(builders.logout)
     const logout = async () => {
         try {
-            await req({ id: auth.id })
+            await req({})
             setAuth(null)
         } catch (error) {}
     }
